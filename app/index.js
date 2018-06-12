@@ -35,6 +35,9 @@ module.exports = class extends Generator {
             }, {
                 name: 'mobile端',
                 value: 'mobile'
+            }, {
+                name: 'react+webpack纯洁版',
+                value: 'pure'
             }]
         }, {
             type: 'input',
@@ -87,6 +90,11 @@ module.exports = class extends Generator {
         } else if (this.projectAssets == "pc") { //如果选择pcweb端模板
             this.fs.copy(
                 this.templatePath('pc'),
+                this.destinationPath(this.projectAssets)
+            );
+        } else if (this.projectAssets == "pure") { //react+webpack构建的纯洁版项目
+            this.fs.copy(
+                this.templatePath('react-webpack'),
                 this.destinationPath(this.projectAssets)
             );
         }
