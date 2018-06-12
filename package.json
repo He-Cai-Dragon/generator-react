@@ -4,8 +4,16 @@
   "description": "react模板",
   "main": "index.js",
   "dependencies": {
-    "del": "^3.0.0",
-    "yeoman-generator": "^2.0.5"
+    "chai": "^3.3.0",
+    "chalk": "^1.1.1",
+    "deep-extend": "^0.6.0",
+    "fs-extra": "^0.24.0",
+    "inquirer-npm-name": "^3.0.0",
+    "lodash": "^4.17.10",
+    "mkdirp": "^0.5.1",
+    "mocha": "^2.3.3",
+    "yeoman-generator": "^2.0.1",
+    "yosay": "^1.0.5"
   },
   "devDependencies": {},
   "scripts": {
@@ -23,9 +31,5 @@
   "bugs": {
     "url": "https://github.com/He-Cai-Dragon/generator-reacthcl/issues"
   },
-  "homepage": "https://github.com/He-Cai-Dragon/generator-reacthcl#readme",
-  "dependencies": {
-    "del": "^3.0.0",
-    "yeoman-generator": "^2.0.5"
-  }
+  "homepage": "https://github.com/He-Cai-Dragon/generator-reacthcl#readme"
 }

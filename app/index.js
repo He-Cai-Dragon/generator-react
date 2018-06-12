@@ -1,41 +1,40 @@
-var generators = require('yeoman-generator'),
-    _ = require('yeoman-generator/node_modules/lodash'),
-    glob = require('yeoman-generator/node_modules/glob'),
-    chalk = require('yeoman-generator/node_modules/chalk'),
-    log = console.log,
-    fs = require('fs'),
-    path = require('path'),
-    del = require('del'),
-    generatorName = 'gulp';
+/**
+ * this.fs  :"https://github.com/sboudrias/mem-fs-editor"
+ * @type {[type]}
+ */
+const path = require('path');
+const chalk = require('chalk'); //不同颜色的info
+const Generator = require('yeoman-generator');
+// const askName = require('inquirer-npm-name');
+const yosay = require('yosay'); //yeoman弹出框
+const _ = require('lodash');
+// const extend = require('deep-extend');
+// const mkdirp = require('mkdirp');
 
-module.exports = generators.Base.extend({
-    constructor: function() {
-        generators.Base.apply(this, arguments);
 
-        var dirs = glob.sync('+(src)');
-        //now _.contains has been abandoned by lodash,use _.includes
-        if (_.includes(dirs, 'src')) {
-            log(chalk.bold.green('资源已经初始化，退出...'));
-            setTimeout(function() {
-                process.exit(1);
-            }, 200);
-        }
-    },
-    prompting: function() {
+function makeGeneratorName(name) {
+    name = _.kebabCase(name);
+    name = name.indexOf('generator-') === 0 ? name : 'generator-' + name;
+    return name;
+}
+
+module.exports = class extends Generator {
+    constructor(args, opts) {
+        super(args, opts);
+    }
+    prompting() { //和用户交互的时候（命令行问答之类的）调用
+        this.appname = "template-react"
         var questions = [{
             name: 'projectAssets',
             type: 'list',
             message: '请选择模板:',
             choices: [{
-                name: '原生模板',
-                value: 'component',
+                name: 'pc端',
+                value: 'pc',
                 checked: true
             }, {
-                name: 'JQ模板',
-                value: 'JQcomponent'
-            }, {
-                name: 'require模板',
-                value: 'requireTpl'
+                name: 'mobile端',
+                value: 'mobile'
             }]
         }, {
             type: 'input',
@@ -44,15 +43,15 @@ module.exports = generators.Base.extend({
             default: this.appname
         }, {
             type: 'input',
-            name: 'componentName',
-            message: '输入插件名称',
-            default: this.appname
+            name: 'buildName',
+            message: '打包输出文件名字',
+            default: "build"
         }, {
             type: 'input',
             name: 'projectAuthor',
             message: '项目开发者',
             store: true,
-            default: 'huangxiaoyan'
+            default: 'hcl'
         }, {
             type: 'input',
             name: 'projectVersion',
@@ -61,40 +60,70 @@ module.exports = generators.Base.extend({
         }]
         return this.prompt(questions).then(
             function(answers) {
+
                 for (var item in answers) {
+                    // 把answers里的内容绑定到外层的this，便于后面的调用
                     answers.hasOwnProperty(item) && (this[item] = answers[item]);
                 }
             }.bind(this));
-    },
-    writing: function() {
-        this.projectOutput = './dist';
-        //拷贝文件
-        this.directory(this.projectAssets, 'src');
-        this.copy('package.json', 'package.json');
-        console.log(this.projectAssets);
-        if (this.projectAssets == 'requireTpl') {
-            this.copy(this.projectAssets + '/gulpfile.js', 'gulpfile.js');
-        } else {
-            this.copy('gulpfile.js', 'gulpfile.js');
+    }
+    info() {
+        this.log(chalk.green(
+            'I am going to build your app!'
+        ));
+    }
+    default () {
+
+    }
+
+    writing() {
+        if (this.projectAssets == "mobile") { //如果选择的是移动端的模板
+            this.fs.copy(
+                this.templatePath('mobile'),
+                this.destinationPath(this.projectName)
+            );
+            this.fs.append(this.destinationPath(this.projectName + '/webpack.uat.config.js'), "const outFileName = '" + this.buildName + "';");
+
+        } else if (this.projectAssets == "pc") { //如果选择pcweb端模板
+            this.fs.copy(
+                this.templatePath('pc'),
+                this.destinationPath(this.projectAssets)
+            );
         }
 
-        //模板
-        this.fs.copyTpl(
-            this.templatePath(this.projectAssets + '/js/index.js'),
-            this.destinationPath('src/js/' + this.componentName + '.js'), {
-                componentName: this.componentName
-            }
-        );
-    },
-    end: function() {
-        if (this.projectAssets == 'requireTpl') {
-            del(['src/gulpfile.js']);
-        }
-        del(['src/**/.gitignore', 'src/**/.npmignore', 'src/js/index.js']);
-        var dirs = glob.sync('+(node_modules)');
-        if (!_.includes(dirs, 'node_modules')) {
-            //创建软连接
-            this.spawnCommand('ln', ['-s', '/usr/local/lib/node_modules/common-packages/' + generatorName + '/node_modules', 'node_modules']);
-        }
+        // const pkg = this.fs.readJSON(this.destinationPath('package.json'), {});
+        // const generatorGeneratorPkg = require('../package.json');
+
+        // extend(pkg, {
+        //     dependencies: {
+        //         'yeoman-generator': generatorGeneratorPkg.dependencies['yeoman-generator'],
+        //         chalk: generatorGeneratorPkg.dependencies.chalk,
+        //         yosay: generatorGeneratorPkg.dependencies.yosay
+        //     },
+        //     devDependencies: {
+        //         'yeoman-test': generatorGeneratorPkg.devDependencies['yeoman-test'],
+        //         'yeoman-assert': generatorGeneratorPkg.devDependencies['yeoman-assert']
+        //     },
+        //     jest: {
+        //         testPathIgnorePatterns: ['templates']
+        //     }
+        // });
+        // pkg.keywords = pkg.keywords || [];
+        // pkg.keywords.push('yeoman-generator');
+
+        // this.fs.writeJSON(this.destinationPath('package.json'), pkg);
     }
-})
+
+    conflicts() {
+        // this.fs.append(this.destinationPath('.eslintignore'), '**/templates\n');
+    }
+
+    install() {
+        // this.installDependencies({
+        //     bower: false
+        // });
+    }
+    end() {
+        this.fs.delete(".yo-rc.json") //删除无用给的文件
+    }
+}
