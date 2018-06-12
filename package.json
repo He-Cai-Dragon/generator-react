@@ -1,0 +1,31 @@
+{
+  "name": "generator-reacthcl",
+  "version": "1.0.0",
+  "description": "react模板",
+  "main": "index.js",
+  "dependencies": {
+    "del": "^3.0.0",
+    "yeoman-generator": "^2.0.5"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/He-Cai-Dragon/generator-reacthcl.git"
+  },
+  "keywords": [
+    "Hcl1991919.00"
+  ],
+  "author": "hecl",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/He-Cai-Dragon/generator-reacthcl/issues"
+  },
+  "homepage": "https://github.com/He-Cai-Dragon/generator-reacthcl#readme",
+  "dependencies": {
+    "del": "^3.0.0",
+    "yeoman-generator": "^2.0.5"
+  }
+}
