@@ -71,7 +71,7 @@ module.exports = {
             template: "dev/template.html"
         }),
         new webpack.DefinePlugin({
-            NODE_ENV: JSON.stringify("test"),
+            NODE_ENV: JSON.stringify("prod"),
             PROJECT_PATH: JSON.stringify("/" + outFileName + "/index.html")
         }),
         new webpack.optimize.AggressiveMergingPlugin(), //合并块

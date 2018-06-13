@@ -1,0 +1,14 @@
+
+.am-container {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left:  0rem; 
+    padding-right: 0rem; 
+    width: 100%; 
+    background: white;
+    overflow-x: hidden;
+    overflow-y: auto;
+    
+}

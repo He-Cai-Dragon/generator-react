@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>易付通</title>
+  <title>template</title>
   <meta charset="utf-8" name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
   <style>
     body,div{
@@ -9,21 +9,18 @@
       padding:0px;
     }
   </style>
+  <!-- 蚂蚁金服需要的 引入 Promise 的 fallback 支持 (部分安卓手机不支持 Promise)-->
   <script src="https://as.alipayobjects.com/g/component/fastclick/1.0.6/fastclick.js"></script>
   <script>
-      if ('addEventListener' in document) {
-          document.addEventListener('DOMContentLoaded', function() {
-              FastClick.attach(document.body);
-          }, false);
-      }
-      if(!window.Promise) {
-          document.writeln('<script src="https://as.alipayobjects.com/g/component/es6-promise/3.2.2/es6-promise.min.js"'+'>'+'<'+'/'+'script>');
-      }
+    if ('addEventListener' in document) {
+      document.addEventListener('DOMContentLoaded', function() {
+        FastClick.attach(document.body);
+      }, false);
+    }
+    if(!window.Promise) {
+      document.writeln('<script src="https://as.alipayobjects.com/g/component/es6-promise/3.2.2/es6-promise.min.js"'+'>'+'<'+'/'+'script>');
+    }
   </script>
-  <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
-  <script src="http://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-  <!--百度开发者平台申请ak-->
-  <script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=A30W1QzF9GU1GF5Z21jFZE9RxBd8E1z1"></script>
 </head>
 <body>
 <div id="index"></div>
