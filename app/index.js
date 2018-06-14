@@ -9,6 +9,7 @@ const Generator = require('yeoman-generator');
 const yosay = require('yosay'); //yeoman弹出框
 const _ = require('lodash');
 // const extend = require('deep-extend');
+var EOL = require('os').EOL;
 // const mkdirp = require('mkdirp');
 
 
@@ -60,6 +61,12 @@ module.exports = class extends Generator {
             name: 'projectVersion',
             message: '项目版本号',
             default: '0.0.1'
+        }, {
+            type: 'input',
+            name: 'projectDescription',
+            message: '项目描述',
+            store: true,
+            default: 'hcl'
         }]
         return this.prompt(questions).then(
             function(answers) {
@@ -80,28 +87,52 @@ module.exports = class extends Generator {
     }
 
     writing() {
+        let addField = "const outFileName = '" + this.buildName + "';"; //往webpack.config.json添加的字段信息
         if (this.projectAssets == "mobile") { //如果选择的是移动端的模板
             this.fs.copy(
                 this.templatePath('mobile'),
                 this.destinationPath(this.projectName)
             );
-            this.fs.append(this.destinationPath(this.projectName + '/webpack.uat.config.js'), "const outFileName = '" + this.buildName + "';");
+            //往测试的配置文件添加字段
+            let testConfig = this.fs.read(this.destinationPath(this.projectName + '/webpack.test.config.js'));
+            this.fs.write(this.destinationPath(this.projectName + '/webpack.test.config.js'), addField + EOL + testConfig);
+            //往uat添加字段
+            let uatConfig = this.fs.read(this.destinationPath(this.projectName + '/webpack.uat.config.js'));
+            this.fs.write(this.destinationPath(this.projectName + '/webpack.uat.config.js'), addField + EOL + uatConfig);
+            //往生产配置添加字段
+            let prodConfig = this.fs.read(this.destinationPath(this.projectName + '/webpack.prod.config.js'));
+            this.fs.write(this.destinationPath(this.projectName + '/webpack.prod.config.js'), addField + EOL + prodConfig);
+
 
         } else if (this.projectAssets == "pc") { //如果选择pcweb端模板
             this.fs.copy(
                 this.templatePath('pc'),
-                this.destinationPath(this.projectAssets)
+                this.destinationPath(this.projectName)
             );
+            //往测试的配置文件添加字段
+            let testConfig = this.fs.read(this.destinationPath(this.projectName + '/webpack.test.config.js'));
+            this.fs.write(this.destinationPath(this.projectName + '/webpack.test.config.js'), addField + EOL + testConfig);
+            //往uat添加字段
+            let uatConfig = this.fs.read(this.destinationPath(this.projectName + '/webpack.uat.config.js'));
+            this.fs.write(this.destinationPath(this.projectName + '/webpack.uat.config.js'), addField + EOL + uatConfig);
+            //往生产配置添加字段
+            let prodConfig = this.fs.read(this.destinationPath(this.projectName + '/webpack.prod.config.js'));
+            this.fs.write(this.destinationPath(this.projectName + '/webpack.prod.config.js'), addField + EOL + prodConfig);
+
         } else if (this.projectAssets == "pure") { //react+webpack构建的纯洁版项目
             this.fs.copy(
                 this.templatePath('react-webpack'),
-                this.destinationPath(this.projectAssets)
+                this.destinationPath(this.projectName)
             );
         }
 
-        // const pkg = this.fs.readJSON(this.destinationPath('package.json'), {});
+        const currPackage = this.fs.readJSON(this.destinationPath(this.projectName + '/package.json'), {});
+        currPackage.name = this.projectName;
+        currPackage.version = this.projectVersion;
+        currPackage.author = this.projectAuthor;
+        currPackage.description = this.projectDescription;
+        this.fs.writeJSON(this.destinationPath(this.projectName + '/package.json'), currPackage);
         // const generatorGeneratorPkg = require('../package.json');
-
         // extend(pkg, {
         //     dependencies: {
         //         'yeoman-generator': generatorGeneratorPkg.dependencies['yeoman-generator'],
@@ -119,7 +150,7 @@ module.exports = class extends Generator {
         // pkg.keywords = pkg.keywords || [];
         // pkg.keywords.push('yeoman-generator');
 
-        // this.fs.writeJSON(this.destinationPath('package.json'), pkg);
+
     }
 
     conflicts() {
@@ -128,10 +159,18 @@ module.exports = class extends Generator {
 
     install() {
         // this.installDependencies({
-        //     bower: false
+        //     bower: false,
+        //     npm: true,
+        //     skipInstall: this.options['skip-install']
         // });
+        this.npmInstall(this.destinationPath(this.projectName))
+        // this.installDependencies({
+        //     bower: false,
+        //     npm: true
+        // }).then(() => console.log('Everything is ready!'));
+        // this.runInstall("npm", this.destinationPath(this.projectName));
     }
     end() {
-        this.fs.delete(".yo-rc.json") //删除无用给的文件
+        this.fs.delete(".yo-rc.json") //删除无用的文件
     }
 }
