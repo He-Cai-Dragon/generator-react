@@ -163,7 +163,7 @@ module.exports = class extends Generator {
         //     npm: true,
         //     skipInstall: this.options['skip-install']
         // });
-        this.npmInstall(this.destinationPath(this.projectName))
+        // this.npmInstall(this.destinationPath(this.projectName))
         // this.installDependencies({
         //     bower: false,
         //     npm: true

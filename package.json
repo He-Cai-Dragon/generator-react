@@ -1,6 +1,6 @@
 {
   "name": "generator-reacthcl",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "react模板",
   "main": "index.js",
   "dependencies": {
