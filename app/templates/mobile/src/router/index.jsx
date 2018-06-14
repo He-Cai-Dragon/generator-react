@@ -13,7 +13,7 @@ export default class AppRouter extends Component {
 					<Switch>
 						<Route exact path={enterRouterPath} component={Login}/>
 						<Route path={routerPath+"/home"} component={Home}/>
-						{/**<Route component={Login} />**/}
+						<Route component={Error} />
 					</Switch>
 				</div>
 			</Router>
