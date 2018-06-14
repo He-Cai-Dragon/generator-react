@@ -3,14 +3,14 @@ const path = require('path');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin"); //css代码单独打包
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const outFileName = 'uat';
+const outFileName = 'prod';
 
 
 module.exports = {
     devtool: false,
     entry: {
         bundle: __dirname + '/src/index.jsx',
-        vendor: ["antd-mobile", "react", "react-dom", "react-router-dom"] //单独打包第三方库
+        vendor: ["element-react", "react", "react-dom", "react-router-dom"] //单独打包第三方库
     },
     output: {
         path: path.resolve(__dirname, './' + outFileName), //打包后的js文件存放的地方
@@ -42,13 +42,7 @@ module.exports = {
             use: [{
                 loader: 'babel-loader',
                 options: {
-                    presets: ['es2015', 'stage-2', 'react'],
-                    plugins: [
-                        ["import", {
-                            libraryName: "antd-mobile",
-                            style: "css"
-                        }] // `style: true` 会加载 less 文件
-                    ]
+                    presets: ['es2015', 'stage-2', 'react']
                 }
             }],
             exclude: /node_modules/
@@ -71,7 +65,7 @@ module.exports = {
             template: "dev/template.html"
         }),
         new webpack.DefinePlugin({
-            NODE_ENV: JSON.stringify("uat"),
+            NODE_ENV: JSON.stringify("prod"),
             PROJECT_PATH: JSON.stringify("/" + outFileName + "/index.html")
         }),
         new webpack.optimize.AggressiveMergingPlugin(), //合并块
